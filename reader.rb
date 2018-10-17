@@ -2,6 +2,23 @@ require 'sinatra'
 require 'pp'
 require 'base64'
 
+def kendal(word, cmpr)
+  swaps = 0
+  chars = word.split(//).inject({}) { |memo, l| memo[l] = []; memo }
+  word.split(//).each.with_index do |letter, index|
+    chars[letter] << index
+  end
+
+  chars = chars.inject({}) { |memo, (k, v)| memo[k] = v.cycle; memo }
+  idxs = cmpr.split(//).map { |letter| chars[letter].next }
+  idxs.combination(2).each do |left, right|
+    if left > right
+      swaps += 1
+    end
+  end
+  swaps
+end
+
 COUNTER = {}
 FREQS = ["e", " ", "t", "a", "o", "i", "n", "s", "h", "r", "d", "l", "c", "u", "m", "w", "f", "g", "y", "p", "b", "v", "k", "j", "x", "q", "z"]
 
@@ -77,7 +94,10 @@ end
 post '/NvzMPcgeDHnjAtjSRLZKGKoapdADLMGpuRrkdmyUjhZxLcjRow' do
   payload = JSON.parse(request.body.read)
   p payload
-  p data
+  a, b = payload.fetch('texts')
+  d = kendal(a, b)
+  p d
+  d.to_s
 end
 
 put '*' do
