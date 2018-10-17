@@ -67,9 +67,17 @@ end
 post '/yLWRwqXJWoMcYEezqngieemuTpOpLoUoPNQnIRKRJfmOhLHBcE' do
   payload = JSON.parse(request.body.read)
   data = decode64(payload.fetch('text'))
+  s = []
+  decoded = decode64(payload.fetch('text'))
+  decoded.bytes.each_with_index { |b, i| s << (b.ord ^ 'focus'[i % 5].ord) }
+  s = s.map(&:chr)
+  s.join('')
+end
+
+post '/NvzMPcgeDHnjAtjSRLZKGKoapdADLMGpuRrkdmyUjhZxLcjRow' do
+  payload = JSON.parse(request.body.read)
   p payload
   p data
-  ''
 end
 
 put '*' do
